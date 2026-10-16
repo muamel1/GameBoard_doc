@@ -1,13 +1,23 @@
 (function () {
   const STORAGE_KEY = 'gameboard_lang';
-  const DEFAULT_LANG = 'ar';
+  const DEFAULT_LANG = 'en';
 
+  // Saved choice first, then the browser's language (see lang-detect.js).
   function getSavedLanguage() {
-    return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
+    if (window.GameBoardLang) {
+      return window.GameBoardLang.detectLanguage();
+    }
+    try {
+      return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
+    } catch (e) {
+      return DEFAULT_LANG;
+    }
   }
 
   function setSavedLanguage(lang) {
-    localStorage.setItem(STORAGE_KEY, lang);
+    try {
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch (e) {}
   }
 
   function getTranslations(lang) {
@@ -20,9 +30,12 @@
     return {};
   }
 
-  function applyLanguage(lang) {
+  // Only persist when the user picks a language, so an auto-detected one keeps following the browser.
+  function applyLanguage(lang, persist) {
     const translations = getTranslations(lang);
-    setSavedLanguage(lang);
+    if (persist) {
+      setSavedLanguage(lang);
+    }
 
     const htmlElement = document.documentElement;
     htmlElement.lang = lang;
@@ -73,6 +86,14 @@
       }
     });
 
+    document.querySelectorAll('[data-i18n-href]').forEach((element) => {
+      const key = element.getAttribute('data-i18n-href');
+      if (translations[key] !== undefined) {
+        element.setAttribute('href', translations[key]);
+        element.setAttribute('hreflang', lang);
+      }
+    });
+
     document.querySelectorAll('[data-i18n-aria]').forEach((element) => {
       const key = element.getAttribute('data-i18n-aria');
       if (translations[key] !== undefined) {
@@ -82,9 +103,9 @@
   }
 
   function toggleLanguage() {
-    const currentLang = getSavedLanguage();
+    const currentLang = document.documentElement.lang;
     const nextLang = currentLang === 'ar' ? 'en' : 'ar';
-    applyLanguage(nextLang);
+    applyLanguage(nextLang, true);
   }
 
   window.GameBoardI18n = {
@@ -94,13 +115,17 @@
     getTranslations: getTranslations
   };
 
-  document.addEventListener('DOMContentLoaded', function () {
-    const initialLang = getSavedLanguage();
-    applyLanguage(initialLang);
+  function init() {
+    applyLanguage(getSavedLanguage(), false);
+    document.documentElement.classList.remove('i18n-pending');
 
     const toggleBtn = document.getElementById('lang-toggle-btn');
     if (toggleBtn) {
       toggleBtn.addEventListener('click', toggleLanguage);
     }
-  });
+  }
+
+  // Loaded at the end of <body>, so every element above is already parsed: apply right away
+  // instead of waiting for DOMContentLoaded, which keeps the hidden-page window as short as possible.
+  init();
 })();

@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دليل البطولات - GameBoard</title>
+<meta name="description" content="دليل مبسّط لنظام البطولات في GameBoard: التسجيل، تأكيد الحضور، صالة الانتظار، المباريات، القواعد، والتتويج.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="alternate" hreflang="en" href="tournament-guide-en.html">
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface-2: #f0eee7;
+    --text: #1d1c19;
+    --muted: #5b5850;
+    --border: #dcd8cc;
+    --accent: #8a5a00;
+    --accent-soft: #fbf1dc;
+    --accent-strong: #6b4500;
+    --ok: #1f6b3a;
+    --ok-soft: #e4f3e9;
+    --warn: #8c2f1b;
+    --warn-soft: #fbe8e3;
+    --info: #1d4f80;
+    --info-soft: #e5eef8;
+    --focus: #1d4f80;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413;
+      --surface: #1d1c1a;
+      --surface-2: #262522;
+      --text: #f0eee8;
+      --muted: #b3afa4;
+      --border: #3a3833;
+      --accent: #e8b65c;
+      --accent-soft: #33291a;
+      --accent-strong: #f2c97e;
+      --ok: #7fd19b;
+      --ok-soft: #1c2e22;
+      --warn: #f19a85;
+      --warn-soft: #3a211b;
+      --info: #8fbbe8;
+      --info-soft: #1b2836;
+      --focus: #8fbbe8;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413;
+    --surface: #1d1c1a;
+    --surface-2: #262522;
+    --text: #f0eee8;
+    --muted: #b3afa4;
+    --border: #3a3833;
+    --accent: #e8b65c;
+    --accent-soft: #33291a;
+    --accent-strong: #f2c97e;
+    --ok: #7fd19b;
+    --ok-soft: #1c2e22;
+    --warn: #f19a85;
+    --warn-soft: #3a211b;
+    --info: #8fbbe8;
+    --info-soft: #1b2836;
+    --focus: #8fbbe8;
+    --shadow: none;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: var(--info); text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+
+  .skip-link {
+    position: absolute; inset-inline-start: 16px; top: -60px;
+    background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 8px;
+    z-index: 10; text-decoration: none; font-weight: 600;
+  }
+  .skip-link:focus { top: 12px; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  .hero { padding: 56px 0 36px; border-bottom: 1px solid var(--border); }
+  .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .02em; margin: 0 0 8px; font-size: .95rem; }
+  h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.25; margin: 0 0 14px; font-weight: 700; }
+  .lead { font-size: 1.2rem; color: var(--muted); max-width: 62ch; margin: 0; }
+  .hero-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
+  .hero-facts li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+  .hero-facts strong { display: block; font-size: 1.15rem; }
+  .hero-facts span { color: var(--muted); font-size: .95rem; }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 32px 0 64px; }
+  @media (min-width: 960px) { .layout { grid-template-columns: 250px 1fr; } }
+  nav.toc { align-self: start; }
+  @media (min-width: 960px) { nav.toc { position: sticky; top: 20px; } }
+  .toc-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+  .toc-box h2 { font-size: 1rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+  .toc-box ol { margin: 0; padding-inline-start: 22px; }
+  .toc-box li { margin: 3px 0; }
+  .toc-box a { color: var(--text); text-decoration: none; }
+  .toc-box a:hover { color: var(--accent); text-decoration: underline; }
+
+  main section { margin-bottom: 56px; scroll-margin-top: 16px; }
+  h2.sec { font-size: 1.65rem; margin: 0 0 6px; line-height: 1.4; }
+  .sec-intro { color: var(--muted); margin: 0 0 20px; }
+  h3 { font-size: 1.2rem; margin: 26px 0 8px; }
+  p { margin: 0 0 14px; }
+  ul, ol { padding-inline-start: 24px; }
+  li { margin: 4px 0; }
+  .num { font-variant-numeric: tabular-nums; }
+  kbd, .ui {
+    font-family: inherit; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1px 8px; font-size: .95em; white-space: nowrap;
+  }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); }
+  .grid-2 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .grid-3 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card h3 { margin-top: 0; }
+
+  .note { border-radius: var(--radius); padding: 14px 18px; margin: 18px 0; border: 1px solid; }
+  .note p:last-child { margin-bottom: 0; }
+  .note .label { font-weight: 700; display: block; margin-bottom: 2px; }
+  .note.tip { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+  .note.tip .label { color: var(--ok); }
+  .note.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+  .note.warn .label { color: var(--warn); }
+  .note.info { background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 35%, transparent); }
+  .note.info .label { color: var(--info); }
+
+  /* Timeline */
+  ol.timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+  ol.timeline::before {
+    content: ""; position: absolute; inset-inline-start: 19px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--border);
+  }
+  ol.timeline > li { position: relative; padding-inline-start: 56px; margin: 0 0 22px; }
+  .t-dot {
+    position: absolute; inset-inline-start: 0; top: 2px; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--accent-soft); border: 2px solid var(--accent); color: var(--accent-strong);
+    display: grid; place-items: center; font-weight: 700;
+  }
+  .t-when { display: inline-block; font-size: .9rem; font-weight: 600; color: var(--accent-strong); background: var(--accent-soft); border-radius: 999px; padding: 0 12px; margin-bottom: 4px; }
+  ol.timeline h3 { margin: 2px 0 6px; }
+
+  /* Bracket */
+  .bracket { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 18px 0 8px; }
+  .round h4 { margin: 0 0 10px; font-size: 1rem; color: var(--muted); text-align: center; }
+  .round ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; justify-content: space-around; gap: 12px; height: calc(100% - 36px); }
+  .match { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .match div { padding: 6px 10px; font-size: .95rem; display: flex; justify-content: space-between; gap: 8px; }
+  .match div + div { border-top: 1px solid var(--border); }
+  .match .bye { color: var(--muted); font-style: italic; }
+  .match .win { font-weight: 700; background: var(--accent-soft); }
+  .seed { color: var(--muted); font-size: .85rem; }
+  @media (max-width: 640px) {
+    .bracket { grid-template-columns: 1fr; }
+    .round ul { height: auto; }
+  }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; }
+  caption { text-align: start; padding: 12px 16px 0; font-weight: 600; color: var(--muted); }
+  th, td { text-align: start; padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { background: var(--surface-2); font-weight: 600; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  tbody th { font-weight: 600; }
+
+  /* Games */
+  .games { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .games li { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+  .games strong { display: block; }
+  .games span { color: var(--muted); font-size: .9rem; }
+
+  /* FAQ */
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin: 0 0 10px; }
+  summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style-position: inside; }
+  details[open] summary { border-bottom: 1px solid var(--border); }
+  details > div { padding: 12px 18px 4px; }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps li { counter-increment: s; position: relative; padding-inline-start: 44px; margin: 0 0 12px; }
+  .steps li::before {
+    content: counter(s); position: absolute; inset-inline-start: 0; top: 1px; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--surface-2); border: 1px solid var(--border); display: grid; place-items: center; font-weight: 700; font-size: .9rem;
+  }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: .95rem; }
+  .theme-toggle {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; font: inherit; font-size: .9rem; cursor: pointer; float: inline-end; margin-top: -4px;
+  }
+  a.theme-toggle { text-decoration: none; margin-inline-end: 8px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    nav.toc, .skip-link, .theme-toggle { display: none; }
+    .layout { display: block; }
+    .card, .match, details, .table-wrap { box-shadow: none; }
+    details > div { display: block; }
+    section { break-inside: avoid-page; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#content">تخطَّ إلى المحتوى</a>
+
+<header class="hero">
+  <div class="wrap">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">الوضع الداكن</button>
+    <a class="theme-toggle" id="langSwitch" href="tournament-guide-en.html" hreflang="en" lang="en">English</a>
+    <p class="eyebrow"><a href="index.html" style="color: inherit;">GameBoard</a></p>
+    <h1>دليل البطولات</h1>
+    <p class="lead">كل ما تحتاج معرفته للمشاركة في بطولات GameBoard: من التسجيل وتأكيد الحضور، إلى صالة الانتظار والمباريات، وحتى التتويج بالتاج. البطولة تُدار بالكامل تلقائياً، وكل ما عليك هو أن تكون حاضراً وتلعب.</p>
+    <ul class="hero-facts" aria-label="البطولة في سطور">
+      <li><strong>خروج المغلوب</strong><span>من يخسر مباراة يخرج من البطولة</span></li>
+      <li><strong>لاعب ضد لاعب</strong><span>كل مباراة بين متنافسَين اثنين</span></li>
+      <li><strong>تأكيد الحضور</strong><span>يبدأ قبل 5 دقائق من الانطلاق</span></li>
+      <li><strong>تاج البطل</strong><span>يظهر بجانب اسم اللعبة بعد الفوز</span></li>
+    </ul>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-labelledby="toc-title">
+    <div class="toc-box">
+      <h2 id="toc-title">محتويات الدليل</h2>
+      <ol>
+        <li><a href="#quick">البداية السريعة</a></li>
+        <li><a href="#find">أين أجد البطولات؟</a></li>
+        <li><a href="#timeline">مراحل البطولة</a></li>
+        <li><a href="#bracket">شجرة البطولة والتصنيف</a></li>
+        <li><a href="#lobby">صالة الانتظار</a></li>
+        <li><a href="#match">أثناء المباراة</a></li>
+        <li><a href="#timer">مهلة الدور</a></li>
+        <li><a href="#rules">الانسحاب والغياب والتعادل</a></li>
+        <li><a href="#penalties">العقوبات والإقصاء</a></li>
+        <li><a href="#crown">التتويج والتاج</a></li>
+        <li><a href="#notify">الإشعارات</a></li>
+        <li><a href="#faq">أسئلة شائعة</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main id="content" tabindex="-1">
+
+    <!-- 1 -->
+    <section id="quick" aria-labelledby="quick-h">
+      <h2 class="sec" id="quick-h">البداية السريعة</h2>
+      <p class="sec-intro">إن كنت مستعجلاً، فهذه هي الخطوات الأساسية فقط.</p>
+      <ol class="steps">
+        <li>افتح نافذة <span class="ui">البطولات</span> (راجع <a href="#find">أين أجد البطولات؟</a>)، واختر البطولة التي تريدها، ثم اضغط <span class="ui">تسجيل</span>.</li>
+        <li>قبل موعد البدء بـ<span class="num">5</span> دقائق تظهر لك نافذة تأكيد الحضور. <strong>أكّد حضورك</strong>، فهذه الخطوة إلزامية.</li>
+        <li>اقبل دعوة <strong>صالة الانتظار</strong>، أو انتظر وسيُنقلك الخادم إليها تلقائياً قبل البدء بدقيقة.</li>
+        <li>عند الانطلاق تُنقل إلى طاولة مباراتك وتبدأ اللعبة فوراً. العب دورك قبل انتهاء المهلة.</li>
+        <li>بعد كل مباراة تعود تلقائياً إلى صالة الانتظار. إن فزت، تنتظر مباراتك التالية حتى النهائي.</li>
+      </ol>
+      <div class="note warn" role="note">
+        <span class="label">تنبيه مهم</span>
+        <p>إن سجّلت ولم تؤكد حضورك قبل البدء، تُستبعد من البطولة <strong>وتُحرم من المشاركة في البطولة التالية</strong>. إن لم تعد قادراً على المشاركة، ألغِ تسجيلك قبل أن تبدأ مرحلة تأكيد الحضور.</p>
+      </div>
+    </section>
+
+
+    <!-- 3 -->
+    <section id="find" aria-labelledby="find-h">
+      <h2 class="sec" id="find-h">أين أجد البطولات؟</h2>
+      <p class="sec-intro">نافذة البطولات موجودة في عميل ويندوز وتطبيق الجوال، وطريقة فتحها تختلف قليلاً بين الاثنين.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>عميل ويندوز</h3>
+          <p>اضغط <kbd>F1</kbd> لفتح قائمة التنقل ثم اختر <span class="ui">البطولات</span>، أو اضغط الاختصار <kbd dir="ltr">Ctrl+Shift+T</kbd> لفتح نافذة البطولات مباشرة. هذا هو الاختصار الافتراضي، ويمكنك تغييره من إعدادات الاختصارات.</p>
+        </div>
+        <div class="card">
+          <h3>تطبيق الجوال</h3>
+          <p>افتح القائمة الجانبية واختر <span class="ui">البطولات</span>.</p>
+        </div>
+      </div>
+      <h3>محتويات نافذة البطولات</h3>
+      <ul>
+        <li><strong>تبويبان:</strong> الأول للبطولات القادمة والجارية، والثاني للبطولات المنتهية.</li>
+        <li><strong>تفاصيل البطولة المحددة:</strong> اللعبة، والحالة، وموعد البدء بتوقيت جهازك، وعدد المسجّلين من الحد الأقصى، وحالة حضورك، واسم البطل بعد انتهاء البطولة.</li>
+        <li><strong>أزرار تتغير حسب حالة البطولة،</strong> كما في الجدول التالي.</li>
+      </ul>
+      <div class="table-wrap">
+        <table>
+          <caption>الأزرار المتاحة حسب حالة البطولة</caption>
+          <thead>
+            <tr><th scope="col">حالة البطولة</th><th scope="col">ما يمكنك فعله</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">التسجيل مفتوح</th><td><span class="ui">تسجيل</span>، أو <span class="ui">إلغاء التسجيل</span> إن كنت مسجّلاً</td></tr>
+            <tr><th scope="row">تأكيد الحضور مفتوح</th><td><span class="ui">تأكيد الحضور</span> إن كنت مسجّلاً، أو <span class="ui">التسجيل وتأكيد الحضور</span> إن لم تكن مسجّلاً</td></tr>
+            <tr><th scope="row">جارية أو منتهية</th><td><span class="ui">عرض شجرة البطولة</span> لمعرفة المباريات حسب الجولة، وحالة كل مباراة، والفائز فيها</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note tip" role="note">
+        <span class="label">معلومة</span>
+        <p>زر عرض الشجرة متاح في كل الحالات. وقبل انطلاق البطولة لا توجد مباريات بعد، لأنها لا تُرسم إلا عند البدء.</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="timeline" aria-labelledby="timeline-h">
+      <h2 class="sec" id="timeline-h">مراحل البطولة</h2>
+      <p class="sec-intro">تمر كل بطولة بالمراحل التالية بالترتيب، وينقلها الخادم من مرحلة إلى أخرى تلقائياً حسب الوقت.</p>
+      <ol class="timeline">
+        <li>
+          <span class="t-dot" aria-hidden="true">1</span>
+          <span class="t-when">عند الإنشاء</span>
+          <h3>الإعلان وفتح التسجيل</h3>
+          <p>يُعلَن عن البطولة لجميع المتصلين باسمها ولعبتها وموعد بدئها وخيارات مبارياتها، ويُفتح التسجيل فوراً. يمكنك التسجيل وإلغاء التسجيل بحرية في هذه المرحلة، ما دام في البطولة مكان شاغر.</p>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">2</span>
+          <span class="t-when">قبل البدء بـ5 دقائق</span>
+          <h3>تأكيد الحضور وفتح صالة الانتظار</h3>
+          <p>يُطلب من كل مسجّل تأكيد حضوره، وتظهر لكل مسجّل متصل نافذة تسأله إن كان سيشارك، وفيها زر <span class="ui">تأكيد الحضور</span>. تُفتح في الوقت نفسه صالة انتظار البطولة وتصلك دعوة إليها.</p>
+          <ul>
+            <li><strong>لا يمكن إلغاء التسجيل</strong> بعد بدء هذه المرحلة.</li>
+            <li>يستطيع من لم يسجّل بعد أن يسجّل ويؤكد حضوره معاً، إن وُجد مكان.</li>
+            <li>إن كنت غير متصل وفعّلت إشعارات البطولات، يصلك إشعار بأن البطولة ستبدأ قريباً.</li>
+          </ul>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">3</span>
+          <span class="t-when">قبل البدء بدقيقة</span>
+          <h3>النقل التلقائي إلى صالة الانتظار</h3>
+          <p>كل من أكّد حضوره وهو متصل يُنقل تلقائياً إلى صالة الانتظار، حتى إن كان على طاولة أخرى، ويسمع رسالة تخبره بذلك.</p>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">4</span>
+          <span class="t-when">موعد البدء</span>
+          <h3>الانطلاق ورسم الشجرة</h3>
+          <ul>
+            <li>يُستبعد من لم يؤكد حضوره، ويُعاقب بالحرمان من البطولة التالية.</li>
+            <li>يُستبعد أيضاً من أكّد حضوره لكنه غير متصل لحظة البدء، دون عقوبة.</li>
+            <li>يُرتَّب الحاضرون حسب تقييمهم في اللعبة، وتُرسم الشجرة، وتبدأ مباريات الجولة الأولى فوراً.</li>
+            <li>إن لم يحضر أحد، تُلغى البطولة.</li>
+          </ul>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">5</span>
+          <span class="t-when">أثناء البطولة</span>
+          <h3>الجولات المتتالية</h3>
+          <p>كلما انتهت مباراة تقدّم الفائز إلى الجولة التالية. وبعد فاصل قصير مدته <span class="num">5</span> ثوانٍ تبدأ أي مباراة اكتمل طرفاها، دون الحاجة إلى انتظار باقي المباريات.</p>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">6</span>
+          <span class="t-when">بعد النهائي</span>
+          <h3>التتويج</h3>
+          <p>يُعلَن اسم البطل على الخادم كله، ويحصل على تاج اللعبة. ثم يغادر مضيف البطولة صالة الانتظار، فتصبح غرفة دردشة عادية.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 5 -->
+    <section id="bracket" aria-labelledby="bracket-h">
+      <h2 class="sec" id="bracket-h">شجرة البطولة والتصنيف</h2>
+      <p class="sec-intro">البطولة بنظام خروج المغلوب: كل مباراة يخرج منها الخاسر، ويتقدم الفائز حتى يبقى لاعب واحد هو البطل.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>التصنيف (البذر)</h3>
+          <p>يُرتَّب اللاعبون من الأقوى إلى الأضعف حسب تقييمهم في <strong>هذه اللعبة تحديداً</strong>، وعند التساوي يُحسم الترتيب بالقرعة. يُوزَّع المصنَّفون بحيث لا يلتقي المصنَّف الأول والثاني إلا في النهائي.</p>
+        </div>
+        <div class="card">
+          <h3>التأهل المباشر والدور التمهيدي</h3>
+          <p>حجم الشجرة دائماً من مضاعفات العدد اثنين: <span class="num">2</span> أو <span class="num">4</span> أو <span class="num">8</span> أو <span class="num">16</span> وهكذا. إن لم يكن عدد اللاعبين كذلك، يتأهل أصحاب التصنيف الأعلى مباشرةً إلى الجولة الثانية، ويتنافس أصحاب التصنيف الأدنى في <strong>الدور التمهيدي</strong> على المقاعد الباقية.</p>
+        </div>
+      </div>
+
+      <h3 id="example-h">مثال: بطولة فيها 6 لاعبين</h3>
+      <p>الشجرة هنا من <span class="num">8</span> مقاعد، فيتأهل المصنَّفان الأول والثاني مباشرةً، ويلعب الأربعة الباقون الدور التمهيدي.</p>
+      <div class="bracket" role="group" aria-labelledby="example-h">
+        <div class="round">
+          <h4>الدور التمهيدي</h4>
+          <ul>
+            <li class="match"><div><span>اللاعب أ <span class="seed">(1)</span></span></div><div class="bye">تأهل مباشر</div></li>
+            <li class="match"><div><span>اللاعب د <span class="seed">(4)</span></span></div><div><span>اللاعب هـ <span class="seed">(5)</span></span></div></li>
+            <li class="match"><div><span>اللاعب ب <span class="seed">(2)</span></span></div><div class="bye">تأهل مباشر</div></li>
+            <li class="match"><div><span>اللاعب ج <span class="seed">(3)</span></span></div><div><span>اللاعب و <span class="seed">(6)</span></span></div></li>
+          </ul>
+        </div>
+        <div class="round">
+          <h4>نصف النهائي</h4>
+          <ul>
+            <li class="match"><div><span>اللاعب أ <span class="seed">(1)</span></span></div><div><span>الفائز من د وهـ</span></div></li>
+            <li class="match"><div><span>اللاعب ب <span class="seed">(2)</span></span></div><div><span>الفائز من ج وو</span></div></li>
+          </ul>
+        </div>
+        <div class="round">
+          <h4>النهائي</h4>
+          <ul>
+            <li class="match"><div><span>الفائز الأول</span></div><div><span>الفائز الثاني</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>أسماء الجولات</h3>
+      <p>تذكر رسائل البطولة وقائمة صالة الانتظار الجولات بأسماء مألوفة: <span class="ui">الدور التمهيدي</span> ثم <span class="ui">دور الـ16</span> ثم <span class="ui">ربع النهائي</span> ثم <span class="ui">نصف النهائي</span> ثم <span class="ui">النهائي</span>، حسب عدد اللاعبين.</p>
+      <div class="note info" role="note">
+        <span class="label">إن كنت اللاعب الوحيد</span>
+        <p>إن حضر لاعب واحد فقط، لا تُلغى البطولة، بل ينضم بوت ليكون خصمك.</p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="lobby" aria-labelledby="lobby-h">
+      <h2 class="sec" id="lobby-h">صالة الانتظار</h2>
+      <p class="sec-intro">صالة الانتظار غرفة دردشة عامة يديرها بوت اسمه <span class="ui">Tournament Host</span> (مضيف البطولة). فيها يجتمع اللاعبون قبل مبارياتهم وبعدها، ويتابعون البطولة لحظة بلحظة.</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>إعلانات المضيف</h3>
+          <p>ملخص الشجرة عند الانطلاق، وبداية كل جولة، ونتيجة كل مباراة، وملخص نتائج الجولة عند اكتمالها.</p>
+        </div>
+        <div class="card">
+          <h3>أحداث مباشرة</h3>
+          <p>أبرز لحظات المباريات الجارية، مثل تسجيل هدف أو خروج لاعب، تُكتب في الدردشة لتتابعها وأنت تنتظر.</p>
+        </div>
+        <div class="card">
+          <h3>رسائل خاصة لك</h3>
+          <p>عند الانطلاق وبعد كل مباراة تخصك، يرسل لك المضيف رسالة لا يراها غيرك. فيها ترتيبك في التصنيف، وهل تأهلت مباشرةً، ومن خصمك القادم، أو من أي مباراة سيأتي.</p>
+        </div>
+      </div>
+      <p style="margin-top:16px">قائمة الصالة لا تعرض الأعضاء كالغرف العادية، بل تعرض الشجرة. أولها سطر يلخص المباريات الجارية، ثم سطر لكل مباراة فيه الجولة واللاعبان والنتيجة. وإن كانت المباراة جارية، يعرض السطر نتيجتها الحالية. وعندما تنتهي مباراتك تُعاد إلى الصالة تلقائياً. وإن خرجت من البطولة، يمكنك البقاء في الصالة لمتابعة بقية المباريات.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="match" aria-labelledby="match-h">
+      <h2 class="sec" id="match-h">أثناء المباراة</h2>
+      <ul>
+        <li>عندما يحين دور مباراتك، يُنشئ الخادم طاولة خاصة لك ولخصمك، ويُنقلكما إليها، وتبدأ اللعبة تلقائياً. تسمع رسالة مثل: <q>بدأت مباراتك في البطولة ضد فلان</q>.</li>
+        <li>خيارات اللعبة محددة مسبقاً لكل بطولة، وهي نفسها في جميع مبارياتها، ولا يمكن تغييرها أثناء المباراة.</li>
+        <li><strong>لا توجد صلاحيات مضيف</strong> في طاولات البطولة، فلا يستطيع أحد إيقاف المباراة أو طرد الخصم. المباراة تنتهي بنتيجة أو بانسحاب فقط.</li>
+        <li>إن كانت اللعبة تحتاج أكثر من لاعبين اثنين، تُكمَّل الطاولة ببوتات مساعدة تحمل أسماء مثل <span class="ui">Bot Partner 1</span>. المنافسة الحقيقية تبقى بينك وبين خصمك فقط.</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="timer" aria-labelledby="timer-h">
+      <h2 class="sec" id="timer-h">مهلة الدور</h2>
+      <p class="sec-intro">لكل دور في مباريات البطولة وقت محدد، غالباً <span class="num">30</span> ثانية، وقد يختلف من بطولة لأخرى أو يكون معطّلاً.</p>
+      <ol class="steps">
+        <li>قبل انتهاء المهلة بـ<span class="num">5</span> ثوانٍ تسمع تنبيهاً.</li>
+        <li>إن انتهت المهلة، يلعب الخادم عنك حركة تلقائية مناسبة للعبة، ثم ينتقل الدور.</li>
+        <li>إن تكرر انتهاء المهلة <strong>3 مرات متتالية</strong>، تُعتبر منسحباً ويفوز خصمك بالمباراة.</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <caption>الحركة التلقائية عند انتهاء المهلة</caption>
+          <thead><tr><th scope="col">نوع اللعبة</th><th scope="col">ما يحدث</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">ألعاب النرد والمخاطرة</th><td>تخسر نقاط الدور غير المحتسبة، ويُنهى دورك</td></tr>
+            <tr><th scope="row">ألعاب الورق</th><td>تمرير أو سحب ورقة أو أبسط حركة متاحة</td></tr>
+            <tr><th scope="row">بقية الألعاب</th><td>تمرير أو إنهاء الدور، أو حركة يختارها الذكاء الاصطناعي</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note tip" role="note">
+        <span class="label">العدّاد يبدأ من جديد</span>
+        <p>بمجرد أن تلعب حركة بنفسك يعود عدد مرات انتهاء المهلة إلى الصفر. المهم ألا تتكرر ثلاث مرات متتالية.</p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="rules" aria-labelledby="rules-h">
+      <h2 class="sec" id="rules-h">الانسحاب والغياب والتعادل</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>كيف تُحسم المباراة في الحالات الخاصة</caption>
+          <thead><tr><th scope="col">الحالة</th><th scope="col">النتيجة</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">غادرت طاولة المباراة بنفسك</th><td>تخسر المباراة بالانسحاب، ويتأهل خصمك</td></tr>
+            <tr><th scope="row">خصمك غير متصل عندما يحين موعد المباراة</th><td>ينتظر الخادم <span class="num">60</span> ثانية. إن لم يتصل، تفوز بالمباراة</td></tr>
+            <tr><th scope="row">انقطع اتصالك أثناء المباراة</th><td>عند عودتك تُعاد تلقائياً إلى مقعدك في المباراة نفسها. إن غبت أكثر من <span class="num">20</span> ثانية وخصمك لاعب حقيقي، يلعب بوت مكانك مؤقتاً حتى تعود. وإن كان خصمك بوتاً، يُحتسب كل دور يفوتك انتهاءً للمهلة، فتخسر بعد ثلاث مرات</td></tr>
+            <tr><th scope="row">انتهت المباراة بالتعادل</th><td>تُعاد المباراة حتى مرتين، وإن استمر التعادل يُحسم الفائز بالقرعة</td></tr>
+            <tr><th scope="row">انقطع جميع اللاعبين عن الخادم</th><td>إن بقي الجميع غير متصلين دقيقتين، تُلغى البطولة</td></tr>
+            <tr><th scope="row">أُعيد تشغيل الخادم أثناء البطولة</th><td>لا تضيع النتائج. المباريات التي كانت جارية تُعاد بعد نصف دقيقة تقريباً، ليتسنى للاعبين إعادة الاتصال</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note warn" role="note">
+        <span class="label">لا تغادر الطاولة</span>
+        <p>الخروج من طاولة المباراة، حتى لو كنت متأخراً في النتيجة، يُحتسب خسارة فورية. ابقَ حتى نهاية المباراة.</p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="penalties" aria-labelledby="pen-h">
+      <h2 class="sec" id="pen-h">العقوبات والإقصاء</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>عقوبة عدم تأكيد الحضور</h3>
+          <p>من سجّل ولم يؤكد حضوره حتى لحظة البدء يُستبعد من البطولة، ولا يستطيع التسجيل في أي بطولة حتى تنطلق البطولة التالية على الخادم. عند انطلاقها تُرفع العقوبة تلقائياً، فيستطيع المشاركة في البطولات التي بعدها.</p>
+        </div>
+        <div class="card">
+          <h3>الإقصاء من البطولة</h3>
+          <p>قد يُقصى اللاعب من البطولة بسبب مخالفة القواعد. عندها يتأهل خصمه فوراً، ولا يستطيع المُقصى العودة إلى البطولة نفسها.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="crown" aria-labelledby="crown-h">
+      <h2 class="sec" id="crown-h">التتويج والتاج</h2>
+      <p>عندما تنتهي المباراة النهائية:</p>
+      <ul>
+        <li>يُعلَن اسم البطل لكل المتصلين بالخادم، مع صوت احتفالي.</li>
+        <li>يحصل البطل، إن كان لاعباً حقيقياً لا بوتاً، على <strong>تاج اللعبة</strong>، فيظهر اسمه بجانب اسم اللعبة في قائمة الألعاب لمدة محددة، غالباً <span class="num">24</span> ساعة.</li>
+        <li>ما دام التاج قائماً، لا تُقام بطولة جديدة للعبة نفسها، فيحتفظ البطل بلقبه حتى تنتهي المدة.</li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section id="notify" aria-labelledby="notify-h">
+      <h2 class="sec" id="notify-h">الإشعارات</h2>
+      <p>إعلانات البطولات تصل تلقائياً إلى كل المتصلين. ولكي تعلم بالبطولات وأنت غير متصل، فعّل خيار <span class="ui">إشعارات البطولات</span> من إعدادات الإشعارات في <strong>تطبيق الجوال</strong>، فهذا الخيار غير موجود في عميل ويندوز. <strong>الخيار معطّل افتراضياً.</strong> عند تفعيله يصلك إشعار في حالتين:</p>
+      <ul>
+        <li>عند الإعلان عن بطولة جديدة.</li>
+        <li>عند بدء تأكيد الحضور في بطولة سجّلت فيها، لتدخل وتؤكد حضورك في الوقت المناسب.</li>
+      </ul>
+      <p>وتجد هذه الإشعارات أيضاً في قائمة إشعاراتك عند دخولك التالي، سواء دخلت من الجوال أو من ويندوز.</p>
+    </section>
+
+
+    <!-- 14 -->
+    <section id="faq" aria-labelledby="faq-h">
+      <h2 class="sec" id="faq-h">أسئلة شائعة</h2>
+      <details>
+        <summary>سجّلت ثم تغيرت ظروفي، ماذا أفعل؟</summary>
+        <div><p>ألغِ تسجيلك من نافذة البطولات بزر <span class="ui">إلغاء التسجيل</span> قبل أن يبدأ تأكيد الحضور، أي قبل الموعد بأكثر من <span class="num">5</span> دقائق، ولن تُعاقب. بعد ذلك لا يمكن إلغاء التسجيل، وعدم تأكيد الحضور يعني الحرمان من البطولة التالية.</p></div>
+      </details>
+      <details>
+        <summary>هل أستطيع الانضمام إلى بطولة بعد بدء تأكيد الحضور؟</summary>
+        <div><p>نعم، ما دامت البطولة لم تبدأ وفيها مكان. اختر البطولة واضغط <span class="ui">التسجيل وتأكيد الحضور</span>.</p></div>
+      </details>
+      <details>
+        <summary>كنت ألعب على طاولة أخرى عندما بدأت البطولة، ماذا يحدث؟</summary>
+        <div><p>إن أكّدت حضورك، ينقلك الخادم تلقائياً إلى صالة الانتظار قبل البدء بدقيقة، ثم إلى طاولة مباراتك عندما يحين دورها. احرص على إنهاء أي لعبة أخرى قبل الموعد.</p></div>
+      </details>
+      <details>
+        <summary>لماذا تأهل لاعب مباشرةً دون أن يلعب؟</summary>
+        <div><p>لأن عدد اللاعبين لم يملأ الشجرة، فيحصل أصحاب التصنيف الأعلى على تأهل مباشر إلى الجولة التالية. وقد يحدث ذلك أيضاً إن أُقصي خصم اللاعب أو انسحب.</p></div>
+      </details>
+      <details>
+        <summary>انقطع اتصالي أثناء المباراة، هل خسرت؟</summary>
+        <div><p>ليس بالضرورة. ادخل مرة أخرى بأسرع ما يمكن، فتُعاد تلقائياً إلى مقعدك في المباراة. إن طال غيابك وكان خصمك لاعباً حقيقياً، يلعب بوت مكانك مؤقتاً. أما إن كان خصمك بوتاً، فتُحتسب أدوارك الفائتة انتهاءً للمهلة، وقد تخسر بعد ثلاث مرات. وتذكّر أن الخروج من الطاولة بنفسك يُحتسب انسحاباً فورياً.</p></div>
+      </details>
+      <details>
+        <summary>هل يمكن أن ألعب ضد بوت؟</summary>
+        <div><p>نعم، في حالة واحدة: إن كنت اللاعب الوحيد الحاضر عند البدء، ينضم بوت ليكون خصمك. وفي الألعاب التي تحتاج أكثر من لاعبين اثنين، تُكمَّل الطاولة ببوتات مساعدة، لكن المنافسة تبقى بينك وبين خصمك.</p></div>
+      </details>
+      <details>
+        <summary>كيف أعرف من خصمي القادم؟</summary>
+        <div><p>يرسل لك مضيف البطولة رسالة خاصة بعد كل مباراة تخصك. ويمكنك أيضاً مراجعة قائمة الشجرة في صالة الانتظار، أو استخدام زر <span class="ui">عرض شجرة البطولة</span> في نافذة البطولات.</p></div>
+      </details>
+      <details>
+        <summary>لماذا لا أستطيع التسجيل في بطولة؟</summary>
+        <div>
+          <p>الأسباب المحتملة:</p>
+          <ul>
+            <li>البطولة ممتلئة.</li>
+            <li>أنت موقوف بسبب عدم تأكيد حضورك في بطولة سابقة.</li>
+            <li>أُقصيت من هذه البطولة.</li>
+            <li>البطولة بدأت بالفعل.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>دليل البطولات في GameBoard. إن واجهتك مشكلة أثناء بطولة، تواصل مع فريق الإشراف من قائمة الدعم والتذاكر.</p>
+    <p><a href="index.html">العودة إلى الصفحة الرئيسية</a></p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("themeToggle");
+    function isDark() {
+      var t = root.getAttribute("data-theme");
+      if (t) return t === "dark";
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function sync() {
+      var dark = isDark();
+      btn.textContent = dark ? "الوضع الفاتح" : "الوضع الداكن";
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    try {
+      var saved = localStorage.getItem("gb-guide-theme");
+      if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+    } catch (e) {}
+    sync();
+    btn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("gb-guide-theme", next); } catch (e) {}
+      sync();
+    });
+    // Keep the site-wide language choice in step with the guide being read
+    try { localStorage.setItem("gameboard_lang", "ar"); } catch (e) {}
+  })();
+</script>
+</body>
+</html>

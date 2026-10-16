@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tournament Guide - GameBoard</title>
+<meta name="description" content="A simple guide to GameBoard tournaments: registration, check-in, the waiting lobby, matches, rules, and crowning the champion.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="alternate" hreflang="ar" href="tournament-guide-ar.html">
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface-2: #f0eee7;
+    --text: #1d1c19;
+    --muted: #5b5850;
+    --border: #dcd8cc;
+    --accent: #8a5a00;
+    --accent-soft: #fbf1dc;
+    --accent-strong: #6b4500;
+    --ok: #1f6b3a;
+    --ok-soft: #e4f3e9;
+    --warn: #8c2f1b;
+    --warn-soft: #fbe8e3;
+    --info: #1d4f80;
+    --info-soft: #e5eef8;
+    --focus: #1d4f80;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413;
+      --surface: #1d1c1a;
+      --surface-2: #262522;
+      --text: #f0eee8;
+      --muted: #b3afa4;
+      --border: #3a3833;
+      --accent: #e8b65c;
+      --accent-soft: #33291a;
+      --accent-strong: #f2c97e;
+      --ok: #7fd19b;
+      --ok-soft: #1c2e22;
+      --warn: #f19a85;
+      --warn-soft: #3a211b;
+      --info: #8fbbe8;
+      --info-soft: #1b2836;
+      --focus: #8fbbe8;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413;
+    --surface: #1d1c1a;
+    --surface-2: #262522;
+    --text: #f0eee8;
+    --muted: #b3afa4;
+    --border: #3a3833;
+    --accent: #e8b65c;
+    --accent-soft: #33291a;
+    --accent-strong: #f2c97e;
+    --ok: #7fd19b;
+    --ok-soft: #1c2e22;
+    --warn: #f19a85;
+    --warn-soft: #3a211b;
+    --info: #8fbbe8;
+    --info-soft: #1b2836;
+    --focus: #8fbbe8;
+    --shadow: none;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: var(--info); text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+
+  .skip-link {
+    position: absolute; inset-inline-start: 16px; top: -60px;
+    background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 8px;
+    z-index: 10; text-decoration: none; font-weight: 600;
+  }
+  .skip-link:focus { top: 12px; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  .hero { padding: 56px 0 36px; border-bottom: 1px solid var(--border); }
+  .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .02em; margin: 0 0 8px; font-size: .95rem; }
+  h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.25; margin: 0 0 14px; font-weight: 700; }
+  .lead { font-size: 1.2rem; color: var(--muted); max-width: 62ch; margin: 0; }
+  .hero-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
+  .hero-facts li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+  .hero-facts strong { display: block; font-size: 1.15rem; }
+  .hero-facts span { color: var(--muted); font-size: .95rem; }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 32px 0 64px; }
+  @media (min-width: 960px) { .layout { grid-template-columns: 250px 1fr; } }
+  nav.toc { align-self: start; }
+  @media (min-width: 960px) { nav.toc { position: sticky; top: 20px; } }
+  .toc-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+  .toc-box h2 { font-size: 1rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+  .toc-box ol { margin: 0; padding-inline-start: 22px; }
+  .toc-box li { margin: 3px 0; }
+  .toc-box a { color: var(--text); text-decoration: none; }
+  .toc-box a:hover { color: var(--accent); text-decoration: underline; }
+
+  main section { margin-bottom: 56px; scroll-margin-top: 16px; }
+  h2.sec { font-size: 1.65rem; margin: 0 0 6px; line-height: 1.4; }
+  .sec-intro { color: var(--muted); margin: 0 0 20px; }
+  h3 { font-size: 1.2rem; margin: 26px 0 8px; }
+  p { margin: 0 0 14px; }
+  ul, ol { padding-inline-start: 24px; }
+  li { margin: 4px 0; }
+  .num { font-variant-numeric: tabular-nums; }
+  kbd, .ui {
+    font-family: inherit; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1px 8px; font-size: .95em; white-space: nowrap;
+  }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); }
+  .grid-2 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .grid-3 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card h3 { margin-top: 0; }
+
+  .note { border-radius: var(--radius); padding: 14px 18px; margin: 18px 0; border: 1px solid; }
+  .note p:last-child { margin-bottom: 0; }
+  .note .label { font-weight: 700; display: block; margin-bottom: 2px; }
+  .note.tip { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+  .note.tip .label { color: var(--ok); }
+  .note.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+  .note.warn .label { color: var(--warn); }
+  .note.info { background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 35%, transparent); }
+  .note.info .label { color: var(--info); }
+
+  /* Timeline */
+  ol.timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+  ol.timeline::before {
+    content: ""; position: absolute; inset-inline-start: 19px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--border);
+  }
+  ol.timeline > li { position: relative; padding-inline-start: 56px; margin: 0 0 22px; }
+  .t-dot {
+    position: absolute; inset-inline-start: 0; top: 2px; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--accent-soft); border: 2px solid var(--accent); color: var(--accent-strong);
+    display: grid; place-items: center; font-weight: 700;
+  }
+  .t-when { display: inline-block; font-size: .9rem; font-weight: 600; color: var(--accent-strong); background: var(--accent-soft); border-radius: 999px; padding: 0 12px; margin-bottom: 4px; }
+  ol.timeline h3 { margin: 2px 0 6px; }
+
+  /* Bracket */
+  .bracket { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 18px 0 8px; }
+  .round h4 { margin: 0 0 10px; font-size: 1rem; color: var(--muted); text-align: center; }
+  .round ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; justify-content: space-around; gap: 12px; height: calc(100% - 36px); }
+  .match { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .match div { padding: 6px 10px; font-size: .95rem; display: flex; justify-content: space-between; gap: 8px; }
+  .match div + div { border-top: 1px solid var(--border); }
+  .match .bye { color: var(--muted); font-style: italic; }
+  .match .win { font-weight: 700; background: var(--accent-soft); }
+  .seed { color: var(--muted); font-size: .85rem; }
+  @media (max-width: 640px) {
+    .bracket { grid-template-columns: 1fr; }
+    .round ul { height: auto; }
+  }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; }
+  caption { text-align: start; padding: 12px 16px 0; font-weight: 600; color: var(--muted); }
+  th, td { text-align: start; padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { background: var(--surface-2); font-weight: 600; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  tbody th { font-weight: 600; }
+
+  /* Games */
+  .games { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .games li { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+  .games strong { display: block; }
+  .games span { color: var(--muted); font-size: .9rem; }
+
+  /* FAQ */
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin: 0 0 10px; }
+  summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style-position: inside; }
+  details[open] summary { border-bottom: 1px solid var(--border); }
+  details > div { padding: 12px 18px 4px; }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps li { counter-increment: s; position: relative; padding-inline-start: 44px; margin: 0 0 12px; }
+  .steps li::before {
+    content: counter(s); position: absolute; inset-inline-start: 0; top: 1px; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--surface-2); border: 1px solid var(--border); display: grid; place-items: center; font-weight: 700; font-size: .9rem;
+  }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: .95rem; }
+  .theme-toggle {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; font: inherit; font-size: .9rem; cursor: pointer; float: inline-end; margin-top: -4px;
+  }
+  a.theme-toggle { text-decoration: none; margin-inline-end: 8px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    nav.toc, .skip-link, .theme-toggle { display: none; }
+    .layout { display: block; }
+    .card, .match, details, .table-wrap { box-shadow: none; }
+    details > div { display: block; }
+    section { break-inside: avoid-page; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<header class="hero">
+  <div class="wrap">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">Dark mode</button>
+    <a class="theme-toggle" id="langSwitch" href="tournament-guide-ar.html" hreflang="ar" lang="ar">العربية</a>
+    <p class="eyebrow"><a href="index.html" style="color: inherit;">GameBoard</a></p>
+    <h1>Tournament Guide</h1>
+    <p class="lead">Everything you need to know to take part in GameBoard tournaments: from registering and checking in, to the waiting lobby and your matches, all the way to winning the crown. Tournaments run fully automatically. All you have to do is show up and play.</p>
+    <ul class="hero-facts" aria-label="Tournaments at a glance">
+      <li><strong>Single elimination</strong><span>Lose a match and you are out</span></li>
+      <li><strong>One versus one</strong><span>Every match is between two competitors</span></li>
+      <li><strong>Check-in</strong><span>Opens 5 minutes before the start</span></li>
+      <li><strong>Champion's crown</strong><span>Shown next to the game's name after you win</span></li>
+    </ul>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-labelledby="toc-title">
+    <div class="toc-box">
+      <h2 id="toc-title">Contents</h2>
+      <ol>
+        <li><a href="#quick">Quick start</a></li>
+        <li><a href="#find">Where do I find tournaments?</a></li>
+        <li><a href="#timeline">Tournament stages</a></li>
+        <li><a href="#bracket">Bracket and seeding</a></li>
+        <li><a href="#lobby">The waiting lobby</a></li>
+        <li><a href="#match">During a match</a></li>
+        <li><a href="#timer">Turn timer</a></li>
+        <li><a href="#rules">Forfeits, no-shows and draws</a></li>
+        <li><a href="#penalties">Penalties and removal</a></li>
+        <li><a href="#crown">The champion and the crown</a></li>
+        <li><a href="#notify">Notifications</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main id="content" tabindex="-1">
+
+    <!-- 1 -->
+    <section id="quick" aria-labelledby="quick-h">
+      <h2 class="sec" id="quick-h">Quick start</h2>
+      <p class="sec-intro">In a hurry? These are the only steps you need.</p>
+      <ol class="steps">
+        <li>Open the <span class="ui">Tournaments</span> window (see <a href="#find">Where do I find tournaments?</a>), pick the tournament you want, and press <span class="ui">Register</span>.</li>
+        <li><span class="num">5</span> minutes before the start, a check-in prompt appears. <strong>Confirm your attendance</strong>. This step is mandatory.</li>
+        <li>Accept the invitation to the <strong>waiting lobby</strong>, or simply wait and the server will move you there automatically one minute before the start.</li>
+        <li>When the tournament starts, you are moved to your match table and the game begins right away. Play your turn before the timer runs out.</li>
+        <li>After every match you return to the waiting lobby automatically. If you won, you wait there for your next match, all the way to the final.</li>
+      </ol>
+      <div class="note warn" role="note">
+        <span class="label">Important</span>
+        <p>If you register but do not check in before the start, you are removed from the tournament <strong>and barred from the next tournament</strong>. If you can no longer take part, unregister before check-in opens.</p>
+      </div>
+    </section>
+
+
+    <!-- 3 -->
+    <section id="find" aria-labelledby="find-h">
+      <h2 class="sec" id="find-h">Where do I find tournaments?</h2>
+      <p class="sec-intro">The Tournaments window is available in both the Windows client and the mobile app, and you open it slightly differently in each.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Windows client</h3>
+          <p>Press <kbd>F1</kbd> to open the navigation menu and choose <span class="ui">Tournaments</span>, or press <kbd>Ctrl+Shift+T</kbd> to open the Tournaments window directly. This is the default shortcut, and you can change it in the shortcut settings.</p>
+        </div>
+        <div class="card">
+          <h3>Mobile app</h3>
+          <p>Open the side menu and choose <span class="ui">Tournaments</span>.</p>
+        </div>
+      </div>
+      <h3>What the Tournaments window contains</h3>
+      <ul>
+        <li><strong>Two tabs:</strong> one for upcoming and running tournaments, and one for finished tournaments.</li>
+        <li><strong>Details of the selected tournament:</strong> the game, its status, the start time in your device's time zone, the number of registered players out of the maximum, your check-in status, and the champion's name once it has ended.</li>
+        <li><strong>Buttons that change with the tournament's status,</strong> as shown in the table below.</li>
+      </ul>
+      <div class="table-wrap">
+        <table>
+          <caption>Available buttons by tournament status</caption>
+          <thead>
+            <tr><th scope="col">Tournament status</th><th scope="col">What you can do</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Registration open</th><td><span class="ui">Register</span>, or <span class="ui">Unregister</span> if you are already registered</td></tr>
+            <tr><th scope="row">Check-in open</th><td><span class="ui">Check in</span> if you are registered, or <span class="ui">Register and check in</span> if you are not</td></tr>
+            <tr><th scope="row">Running or finished</th><td><span class="ui">View bracket</span> to see the matches in each round, the status of each match, and who won it</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note tip" role="note">
+        <span class="label">Good to know</span>
+        <p>The View bracket button is available at every stage. Before the tournament starts there are no matches yet, because the bracket is only drawn at the start.</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="timeline" aria-labelledby="timeline-h">
+      <h2 class="sec" id="timeline-h">Tournament stages</h2>
+      <p class="sec-intro">Every tournament goes through the following stages in order, and the server moves it from one stage to the next automatically based on the time.</p>
+      <ol class="timeline">
+        <li>
+          <span class="t-dot" aria-hidden="true">1</span>
+          <span class="t-when">On creation</span>
+          <h3>Announcement and registration</h3>
+          <p>The tournament is announced to everyone online with its name, game, start time and match options, and registration opens immediately. You can register and unregister freely at this stage, as long as there is a free spot.</p>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">2</span>
+          <span class="t-when">5 minutes before the start</span>
+          <h3>Check-in and the waiting lobby opens</h3>
+          <p>Every registered player is asked to check in. Each registered player who is online sees a prompt asking whether they will take part, with a <span class="ui">Check in</span> button. At the same time, the tournament's waiting lobby opens and you receive an invitation to it.</p>
+          <ul>
+            <li><strong>You can no longer unregister</strong> once this stage begins.</li>
+            <li>Anyone who has not registered yet can register and check in at once, if there is room.</li>
+            <li>If you are offline and have tournament notifications turned on, you get a notification that the tournament is about to start.</li>
+          </ul>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">3</span>
+          <span class="t-when">1 minute before the start</span>
+          <h3>Automatic move to the waiting lobby</h3>
+          <p>Everyone who has checked in and is online is moved to the waiting lobby automatically, even from another table, and hears a message telling them so.</p>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">4</span>
+          <span class="t-when">Start time</span>
+          <h3>Kick-off and the bracket draw</h3>
+          <ul>
+            <li>Anyone who did not check in is removed and penalized with a ban from the next tournament.</li>
+            <li>Anyone who checked in but is offline at the moment of the start is also removed, without a penalty.</li>
+            <li>The players present are ranked by their rating in the game, the bracket is drawn, and first-round matches start right away.</li>
+            <li>If nobody shows up, the tournament is cancelled.</li>
+          </ul>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">5</span>
+          <span class="t-when">During the tournament</span>
+          <h3>Successive rounds</h3>
+          <p>Whenever a match ends, the winner advances to the next round. After a short <span class="num">5</span>-second break, any match whose two players are both known starts, without waiting for the remaining matches.</p>
+        </li>
+        <li>
+          <span class="t-dot" aria-hidden="true">6</span>
+          <span class="t-when">After the final</span>
+          <h3>Crowning the champion</h3>
+          <p>The champion's name is announced across the whole server, and they receive the game's crown. The tournament host then leaves the waiting lobby, and it becomes an ordinary chat room.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 5 -->
+    <section id="bracket" aria-labelledby="bracket-h">
+      <h2 class="sec" id="bracket-h">Bracket and seeding</h2>
+      <p class="sec-intro">Tournaments use single elimination: the loser of every match is out and the winner advances, until only one player remains as champion.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Seeding</h3>
+          <p>Players are ranked from strongest to weakest by their rating in <strong>this particular game</strong>, and ties are broken by a random draw. Seeds are placed so that the first and second seeds can only meet in the final.</p>
+        </div>
+        <div class="card">
+          <h3>Byes and the preliminary round</h3>
+          <p>The bracket size is always a power of two: <span class="num">2</span>, <span class="num">4</span>, <span class="num">8</span>, <span class="num">16</span> and so on. If the number of players is not one of these, the top seeds get a bye straight into the second round, and the lower seeds play a <strong>preliminary round</strong> for the remaining spots.</p>
+        </div>
+      </div>
+
+      <h3 id="example-h">Example: a tournament with 6 players</h3>
+      <p>The bracket here has <span class="num">8</span> slots, so the first and second seeds get a bye, and the other four play the preliminary round.</p>
+      <div class="bracket" role="group" aria-labelledby="example-h">
+        <div class="round">
+          <h4>Preliminary round</h4>
+          <ul>
+            <li class="match"><div><span>Player A <span class="seed">(1)</span></span></div><div class="bye">Bye</div></li>
+            <li class="match"><div><span>Player D <span class="seed">(4)</span></span></div><div><span>Player E <span class="seed">(5)</span></span></div></li>
+            <li class="match"><div><span>Player B <span class="seed">(2)</span></span></div><div class="bye">Bye</div></li>
+            <li class="match"><div><span>Player C <span class="seed">(3)</span></span></div><div><span>Player F <span class="seed">(6)</span></span></div></li>
+          </ul>
+        </div>
+        <div class="round">
+          <h4>Semi-final</h4>
+          <ul>
+            <li class="match"><div><span>Player A <span class="seed">(1)</span></span></div><div><span>Winner of D vs E</span></div></li>
+            <li class="match"><div><span>Player B <span class="seed">(2)</span></span></div><div><span>Winner of C vs F</span></div></li>
+          </ul>
+        </div>
+        <div class="round">
+          <h4>Final</h4>
+          <ul>
+            <li class="match"><div><span>First winner</span></div><div><span>Second winner</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Round names</h3>
+      <p>Tournament messages and the waiting lobby list refer to rounds by familiar names: <span class="ui">Preliminary round</span>, then <span class="ui">Round of 16</span>, then <span class="ui">Quarter-final</span>, then <span class="ui">Semi-final</span>, then <span class="ui">Final</span>, depending on the number of players.</p>
+      <div class="note info" role="note">
+        <span class="label">If you are the only player</span>
+        <p>If only one player shows up, the tournament is not cancelled. Instead, a bot joins as your opponent.</p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="lobby" aria-labelledby="lobby-h">
+      <h2 class="sec" id="lobby-h">The waiting lobby</h2>
+      <p class="sec-intro">The waiting lobby is a public chat room run by a bot called <span class="ui">Tournament Host</span>. Players gather there before and after their matches and follow the tournament as it happens.</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Host announcements</h3>
+          <p>A summary of the bracket at kick-off, the start of each round, the result of every match, and a summary of each round's results when it completes.</p>
+        </div>
+        <div class="card">
+          <h3>Live events</h3>
+          <p>Highlights from matches in progress, such as a goal being scored or a player being knocked out, are posted in the chat so you can follow along while you wait.</p>
+        </div>
+        <div class="card">
+          <h3>Private messages for you</h3>
+          <p>At kick-off and after every match that involves you, the host sends you a message only you can see. It tells you your seed, whether you got a bye, and who your next opponent is, or which match they will come from.</p>
+        </div>
+      </div>
+      <p style="margin-top:16px">Unlike ordinary rooms, the lobby list does not show members. It shows the bracket instead. The first line summarizes the matches in progress, followed by one line per match with the round, the two players and the result. If a match is still in progress, its line shows the current score. When your match ends, you are returned to the lobby automatically. If you are knocked out, you can stay in the lobby to follow the rest of the matches.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="match" aria-labelledby="match-h">
+      <h2 class="sec" id="match-h">During a match</h2>
+      <ul>
+        <li>When it is time for your match, the server creates a private table for you and your opponent, moves you both there, and the game starts automatically. You hear a message such as: <q>Your tournament match against so-and-so has started</q>.</li>
+        <li>The game options are set in advance for each tournament, are the same for all of its matches, and cannot be changed during a match.</li>
+        <li><strong>There are no host privileges</strong> at tournament tables, so nobody can stop the match or kick their opponent. A match only ends with a result or a forfeit.</li>
+        <li>If the game needs more than two players, the table is filled with helper bots with names like <span class="ui">Bot Partner 1</span>. The real competition is still only between you and your opponent.</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="timer" aria-labelledby="timer-h">
+      <h2 class="sec" id="timer-h">Turn timer</h2>
+      <p class="sec-intro">Each turn in a tournament match has a time limit, usually <span class="num">30</span> seconds. It may differ from one tournament to another, or be turned off.</p>
+      <ol class="steps">
+        <li><span class="num">5</span> seconds before time runs out, you hear a warning.</li>
+        <li>If time runs out, the server plays a suitable automatic move for you, and the turn passes on.</li>
+        <li>If time runs out <strong>3 times in a row</strong>, you are treated as having forfeited and your opponent wins the match.</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <caption>The automatic move when time runs out</caption>
+          <thead><tr><th scope="col">Type of game</th><th scope="col">What happens</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Dice and push-your-luck games</th><td>You lose the turn's unbanked points, and your turn ends</td></tr>
+            <tr><th scope="row">Card games</th><td>A pass, a card draw, or the simplest available move</td></tr>
+            <tr><th scope="row">Other games</th><td>A pass or end of turn, or a move chosen by the AI</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note tip" role="note">
+        <span class="label">The count resets</span>
+        <p>As soon as you make a move yourself, the timeout count goes back to zero. What matters is that it does not happen three times in a row.</p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="rules" aria-labelledby="rules-h">
+      <h2 class="sec" id="rules-h">Forfeits, no-shows and draws</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>How a match is decided in special cases</caption>
+          <thead><tr><th scope="col">Situation</th><th scope="col">Outcome</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">You leave the match table yourself</th><td>You lose the match by forfeit, and your opponent advances</td></tr>
+            <tr><th scope="row">Your opponent is offline when the match is due</th><td>The server waits <span class="num">60</span> seconds. If they do not connect, you win the match</td></tr>
+            <tr><th scope="row">You lose connection during the match</th><td>When you come back, you are returned to your seat in the same match automatically. If you are gone for more than <span class="num">20</span> seconds and your opponent is a real player, a bot plays in your place until you return. If your opponent is a bot, every turn you miss counts as a timeout, so you lose after three</td></tr>
+            <tr><th scope="row">The match ends in a draw</th><td>The match is replayed up to two times, and if it is still a draw, the winner is decided by a random draw</td></tr>
+            <tr><th scope="row">All players disconnect from the server</th><td>If everyone stays offline for two minutes, the tournament is cancelled</td></tr>
+            <tr><th scope="row">The server restarts during the tournament</th><td>No results are lost. Matches that were in progress are replayed after about half a minute, giving players time to reconnect</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note warn" role="note">
+        <span class="label">Do not leave the table</span>
+        <p>Leaving the match table, even if you are behind, counts as an immediate loss. Stay until the match is over.</p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="penalties" aria-labelledby="pen-h">
+      <h2 class="sec" id="pen-h">Penalties and removal</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Penalty for not checking in</h3>
+          <p>Anyone who registered but did not check in by the start is removed from the tournament, and cannot register for any tournament until the next tournament on the server starts. Once it starts, the penalty is lifted automatically, so they can take part in the tournaments after it.</p>
+        </div>
+        <div class="card">
+          <h3>Removal from a tournament</h3>
+          <p>A player may be removed from a tournament for breaking the rules. Their opponent then advances immediately, and the removed player cannot rejoin that tournament.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="crown" aria-labelledby="crown-h">
+      <h2 class="sec" id="crown-h">The champion and the crown</h2>
+      <p>When the final ends:</p>
+      <ul>
+        <li>The champion's name is announced to everyone connected to the server, with a celebration sound.</li>
+        <li>The champion, if they are a real player and not a bot, receives the <strong>game's crown</strong>: their name appears next to the game's name in the games list for a set time, usually <span class="num">24</span> hours.</li>
+        <li>While the crown is held, no new tournament is held for the same game, so the champion keeps their title until the time is up.</li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section id="notify" aria-labelledby="notify-h">
+      <h2 class="sec" id="notify-h">Notifications</h2>
+      <p>Tournament announcements reach everyone online automatically. To hear about tournaments while you are offline, turn on <span class="ui">Tournament notifications</span> in the notification settings of the <strong>mobile app</strong>. This option is not available in the Windows client. <strong>It is off by default.</strong> Once it is on, you get a notification in two cases:</p>
+      <ul>
+        <li>When a new tournament is announced.</li>
+        <li>When check-in opens for a tournament you registered for, so you can come in and check in on time.</li>
+      </ul>
+      <p>You will also find these notifications in your notification list the next time you sign in, whether from mobile or Windows.</p>
+    </section>
+
+
+    <!-- 14 -->
+    <section id="faq" aria-labelledby="faq-h">
+      <h2 class="sec" id="faq-h">FAQ</h2>
+      <details>
+        <summary>I registered but my plans changed. What should I do?</summary>
+        <div><p>Unregister from the Tournaments window with the <span class="ui">Unregister</span> button before check-in opens, that is, more than <span class="num">5</span> minutes before the start, and you will not be penalized. After that you can no longer unregister, and not checking in means a ban from the next tournament.</p></div>
+      </details>
+      <details>
+        <summary>Can I join a tournament after check-in has opened?</summary>
+        <div><p>Yes, as long as the tournament has not started and there is room. Select the tournament and press <span class="ui">Register and check in</span>.</p></div>
+      </details>
+      <details>
+        <summary>I was playing at another table when the tournament started. What happens?</summary>
+        <div><p>If you checked in, the server moves you to the waiting lobby automatically one minute before the start, and then to your match table when it is your turn to play. Try to finish any other game before the start time.</p></div>
+      </details>
+      <details>
+        <summary>Why did a player advance without playing?</summary>
+        <div><p>Because the number of players did not fill the bracket, so the top seeds get a bye into the next round. It can also happen if the player's opponent was removed or forfeited.</p></div>
+      </details>
+      <details>
+        <summary>I lost connection during a match. Did I lose?</summary>
+        <div><p>Not necessarily. Sign back in as quickly as you can, and you will be returned to your seat in the match automatically. If you are gone for a while and your opponent is a real player, a bot plays in your place temporarily. If your opponent is a bot, your missed turns count as timeouts, and you may lose after three. Remember that leaving the table yourself counts as an immediate forfeit.</p></div>
+      </details>
+      <details>
+        <summary>Could I end up playing against a bot?</summary>
+        <div><p>Yes, in one case: if you are the only player present at the start, a bot joins as your opponent. In games that need more than two players, the table is filled with helper bots, but the competition is still between you and your opponent.</p></div>
+      </details>
+      <details>
+        <summary>How do I find out who my next opponent is?</summary>
+        <div><p>The tournament host sends you a private message after every match that involves you. You can also check the bracket list in the waiting lobby, or use the <span class="ui">View bracket</span> button in the Tournaments window.</p></div>
+      </details>
+      <details>
+        <summary>Why can't I register for a tournament?</summary>
+        <div>
+          <p>Possible reasons:</p>
+          <ul>
+            <li>The tournament is full.</li>
+            <li>You are suspended for not checking in to a previous tournament.</li>
+            <li>You were removed from this tournament.</li>
+            <li>The tournament has already started.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>GameBoard Tournament Guide. If you run into a problem during a tournament, contact the moderation team from the Support and Tickets menu.</p>
+    <p><a href="index.html">Back to the home page</a></p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("themeToggle");
+    function isDark() {
+      var t = root.getAttribute("data-theme");
+      if (t) return t === "dark";
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function sync() {
+      var dark = isDark();
+      btn.textContent = dark ? "Light mode" : "Dark mode";
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    try {
+      var saved = localStorage.getItem("gb-guide-theme");
+      if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+    } catch (e) {}
+    sync();
+    btn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("gb-guide-theme", next); } catch (e) {}
+      sync();
+    });
+    // Keep the site-wide language choice in step with the guide being read
+    try { localStorage.setItem("gameboard_lang", "en"); } catch (e) {}
+  })();
+</script>
+</body>
+</html>
